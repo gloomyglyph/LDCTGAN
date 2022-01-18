@@ -9,7 +9,7 @@ class CTPatchDataset(tordata.Dataset):
     def __init__(self, npy_root, hu_range, transforms=None):
         self.transforms = transforms
         hu_min, hu_max = hu_range
-        data = torch.from_numpy(np.load(npy_root).astype(np.float32) - 1024)
+        data = torch.from_numpy(np.load(npy_root, mmap_mode='r').astype(np.float32) - 1024)
         # normalize to [0, 1]
         data = (torch.clamp(data, hu_min, hu_max) - hu_min) / (hu_max - hu_min)
         self.low_doses, self.full_doses = data[0], data[1]
