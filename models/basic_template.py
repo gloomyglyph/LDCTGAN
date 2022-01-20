@@ -81,20 +81,17 @@ class TrainTask(object):
                                       num_iter=opt.max_iter,
                                       restore_iter=opt.resume_iter)
 
-        train_loader = torch.utils.data.DataLoader(
-            dataset=train_dataset,
-            batch_size=opt.batch_size,
-            num_workers=opt.num_workers,
-            sampler=train_sampler,
-            shuffle=False,
-            drop_last=False,
-            pin_memory=True
-        )
+        num_workers_o = 4
+        #train_loader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=opt.batch_size,
+        #    num_workers=opt.num_workers, sampler=train_sampler, shuffle=False, drop_last=False, pin_memory=True)
 
+        train_loader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=opt.batch_size,
+                                                   num_workers=num_workers_o, sampler=train_sampler, shuffle=False,
+                                                   drop_last=False, pin_memory=True)
         test_dataset = dataset_dict[opt.test_dataset_name](hu_range=(opt.hu_min, opt.hu_max))
         test_images = [test_dataset[i] for i in range(0, min(300, len(test_dataset)), 50)]
-        low_dose = torch.stack([x[0] for x in test_images], dim=0).cuda()
-        full_dose = torch.stack([x[1] for x in test_images], dim=0).cuda()
+        low_dose = torch.stack([x[0] for x in test_images], dim=0)
+        full_dose = torch.stack([x[1] for x in test_images], dim=0)
         self.test_images = (low_dose, full_dose)
         test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=opt.test_batch_size, shuffle=False,
                                                   num_workers=opt.num_workers, pin_memory=True)
