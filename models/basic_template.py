@@ -90,8 +90,8 @@ class TrainTask(object):
                                                    drop_last=False, pin_memory=True)
         test_dataset = dataset_dict[opt.test_dataset_name](hu_range=(opt.hu_min, opt.hu_max))
         test_images = [test_dataset[i] for i in range(0, min(300, len(test_dataset)), 50)]
-        low_dose = torch.stack([x[0] for x in test_images], dim=0)
-        full_dose = torch.stack([x[1] for x in test_images], dim=0)
+        low_dose = torch.stack([x[0] for x in test_images], dim=0).cuda()
+        full_dose = torch.stack([x[1] for x in test_images], dim=0).cuda()
         self.test_images = (low_dose, full_dose)
         test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=opt.test_batch_size, shuffle=False,
                                                   num_workers=opt.num_workers, pin_memory=True)
